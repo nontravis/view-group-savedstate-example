@@ -1,11 +1,11 @@
 # ViewGroup savedstate EXAMPLE
 
-If you want to Test savedstate
+If you want to test savedstate
 
 Enable **Developer mode**
 
 ```
-Go to Developer Options -> and check **Don't Keep Activities**
+Go to Developer Options -> and check ** Don't Keep Activities **
 ```
 
 ![View savedstate][view_savedstate]

@@ -1,0 +1,34 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <TextView
+        android:text="Go to Developer Options -> Don't Keep Activities"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+        android:id="@+id/switch1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+        android:id="@+id/switch2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+        android:id="@+id/switch3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test Saved/Restore state in Adapter"/>
+</LinearLayout>

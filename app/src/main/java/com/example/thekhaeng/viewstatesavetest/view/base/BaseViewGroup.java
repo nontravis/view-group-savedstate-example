@@ -43,6 +43,18 @@ abstract public class BaseViewGroup extends FrameLayout{
         setupView();
     }
 
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof ChildSavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+        ChildSavedState ss = (ChildSavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        onRestoreChildInstanceState(ss);
+    }
+
     protected Parcelable onSaveChildInstanceState( ChildSavedState ss ){
         ss.childrenStates = new SparseArray();
         for( int i = 0; i < getChildCount(); i++ ){
@@ -57,24 +69,26 @@ abstract public class BaseViewGroup extends FrameLayout{
         return ss;
     }
 
-    @Override
-    protected void onRestoreInstanceState( Parcelable state ){
-//            super.onRestoreInstanceState(state);
-        if (!(state instanceof ChildSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-        ChildSavedState ss = (ChildSavedState) state;
-        super.onRestoreInstanceState( ss.getSuperState() );
-        for( int i = 0; i < getChildCount(); i++ ){
-            int id = getChildAt( i ).getId();
-            if( id != 0 ){
-                if( ss.childrenStates.get( id ) != null ){
-                    SparseArray childrenState = (SparseArray) ss.childrenStates.get( id );
-                    getChildAt( i ).restoreHierarchyState( childrenState );
+    private void onRestoreChildInstanceState(ChildSavedState ss) {
+        for (int i = 0; i < getChildCount(); i++) {
+            int id = getChildAt(i).getId();
+            if (id != 0) {
+                if (ss.childrenStates.get(id) != null) {
+                    SparseArray childrenState = (SparseArray) ss.childrenStates.get(id);
+                    getChildAt(i).restoreHierarchyState(childrenState);
                 }
             }
         }
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container ){
+        dispatchFreezeSelfOnly( container );
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container ){
+        dispatchThawSelfOnly( container );
     }
 
     public static abstract class ChildSavedState extends BaseSavedState{
@@ -96,16 +110,6 @@ abstract public class BaseViewGroup extends FrameLayout{
         }
     }
 
-
-    @Override
-    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container ){
-        dispatchFreezeSelfOnly( container );
-    }
-
-    @Override
-    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container ){
-        dispatchThawSelfOnly( container );
-    }
 
     private void inflateLayout(){
         inflate( getContext(), getLayoutRes(), this );

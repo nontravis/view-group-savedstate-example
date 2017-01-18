@@ -20,7 +20,7 @@ abstract public class BaseViewGroup extends FrameLayout{
 
     ...
 
-    protected Parcelable onSaveChildInstanceState( ChildSavedState ss ){
+    protected Parcelable onSaveInstanceChildState( ChildSavedState ss ){
         ss.childrenStates = new SparseArray();
         for( int i = 0; i < getChildCount(); i++ ){
             int id = getChildAt( i ).getId();

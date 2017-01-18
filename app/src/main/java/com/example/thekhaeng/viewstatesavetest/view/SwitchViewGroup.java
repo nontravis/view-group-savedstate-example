@@ -79,7 +79,7 @@ public class SwitchViewGroup extends BaseViewGroup{
         Parcelable superState = super.onSaveInstanceState();
 //        SavedState ss = new SavedState( superState );
         // Must call
-        SavedState ss = (SavedState) onSaveChildInstanceState( new SavedState( superState ) );
+        SavedState ss = (SavedState) onSaveInstanceChildState( new SavedState( superState ) );
         //no data to save
         return ss;
     }

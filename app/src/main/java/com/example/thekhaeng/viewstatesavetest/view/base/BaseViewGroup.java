@@ -52,10 +52,11 @@ abstract public class BaseViewGroup extends FrameLayout{
         }
         ChildSavedState ss = (ChildSavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-        onRestoreInstanceChildState(ss);
+        onRestoreChildInstanceState(ss);
     }
 
-    protected Parcelable onSaveInstanceChildState( ChildSavedState ss ){
+    @SuppressWarnings( "unchecked" )
+    protected Parcelable onSaveChildInstanceState( ChildSavedState ss ){
         ss.childrenStates = new SparseArray();
         for( int i = 0; i < getChildCount(); i++ ){
             int id = getChildAt( i ).getId();
@@ -69,7 +70,7 @@ abstract public class BaseViewGroup extends FrameLayout{
         return ss;
     }
 
-    private void onRestoreInstanceChildState( ChildSavedState ss) {
+    private void onRestoreChildInstanceState( ChildSavedState ss) {
         for (int i = 0; i < getChildCount(); i++) {
             int id = getChildAt(i).getId();
             if (id != 0) {

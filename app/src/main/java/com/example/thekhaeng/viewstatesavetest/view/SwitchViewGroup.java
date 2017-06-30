@@ -77,10 +77,9 @@ public class SwitchViewGroup extends BaseViewGroup{
     @Override
     public Parcelable onSaveInstanceState(){
         Parcelable superState = super.onSaveInstanceState();
-//        SavedState ss = new SavedState( superState );
         // Must call
         SavedState ss = (SavedState) onSaveChildInstanceState( new SavedState( superState ) );
-        //no data to save
+        // save data here
         return ss;
     }
 
@@ -93,7 +92,7 @@ public class SwitchViewGroup extends BaseViewGroup{
         }
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState( ss );
-        //no data to restore
+        // restore data here
     }
 
 
@@ -104,15 +103,14 @@ public class SwitchViewGroup extends BaseViewGroup{
         }
 
         private SavedState( Parcel in, ClassLoader classLoader ){
-//            super( in );
             super( in, classLoader );
-            //no data to save
+            // save data here
         }
 
         @Override
         public void writeToParcel( Parcel out, int flags ){
             super.writeToParcel( out, flags );
-            //no data to restore
+            // restore data here
         }
 
         public static final ClassLoaderCreator<SavedState> CREATOR = new ClassLoaderCreator<SwitchViewGroup.SavedState>(){

@@ -12,15 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+    <com.example.thekhaeng.viewstatesavetest.view.kotlin.SwitchViewGroup
         android:id="@+id/switch1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+    <com.example.thekhaeng.viewstatesavetest.view.kotlin.SwitchViewGroup
         android:id="@+id/switch2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup
+    <com.example.thekhaeng.viewstatesavetest.view.kotlin.SwitchViewGroup
         android:id="@+id/switch3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

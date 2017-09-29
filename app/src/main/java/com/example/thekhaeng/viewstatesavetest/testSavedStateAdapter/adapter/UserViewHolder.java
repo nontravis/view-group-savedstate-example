@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.thekhaeng.viewstatesavetest.R;
-import com.example.thekhaeng.viewstatesavetest.view.SwitchViewGroup;
+import com.example.thekhaeng.viewstatesavetest.view.kotlin.SwitchViewGroup;
 
 /**
  * Created by TheKhaeng

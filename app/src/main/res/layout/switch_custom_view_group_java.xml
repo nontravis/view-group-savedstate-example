@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:hint="My Text" />
 
-    <com.example.thekhaeng.viewstatesavetest.view.kotlin.CustomSwitch
+    <com.example.thekhaeng.viewstatesavetest.view.java.CustomSwitch
         android:id="@+id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

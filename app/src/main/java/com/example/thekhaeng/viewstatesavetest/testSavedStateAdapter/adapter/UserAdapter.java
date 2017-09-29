@@ -50,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter{
             userViewHolder.name.setText( user.getName() );
             userViewHolder.age.setText( "" + user.getAge() );
             userViewHolder.sw.setCheck( user.isCheck() );
-            userViewHolder.sw.setText( user.getText() );
+            userViewHolder.sw.setTextToEditText( user.getText() );
             userViewHolder.sw.setOnCheckChangeListener( new CompoundButton.OnCheckedChangeListener(){
                 @Override
                 public void onCheckedChanged( CompoundButton buttonView, boolean isChecked ){

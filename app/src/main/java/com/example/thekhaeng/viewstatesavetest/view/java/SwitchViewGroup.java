@@ -1,4 +1,4 @@
-package com.example.thekhaeng.viewstatesavetest.view;
+package com.example.thekhaeng.viewstatesavetest.view.java;
 
 import android.content.Context;
 import android.os.Build;
@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.example.thekhaeng.viewstatesavetest.R;
 import com.example.thekhaeng.viewstatesavetest.testSavedStateAdapter.adapter.UserAdapter;
-import com.example.thekhaeng.viewstatesavetest.view.base.BaseViewGroup;
+import com.example.thekhaeng.viewstatesavetest.view.java.base.BaseViewGroup;
 
 /**
  * Created by TheKhaeng
@@ -40,7 +40,7 @@ public class SwitchViewGroup extends BaseViewGroup{
 
     @Override
     protected int getLayoutRes(){
-        return R.layout.switch_custom_view_group;
+        return R.layout.switch_custom_view_group_java;
     }
 
     @Override
@@ -49,8 +49,8 @@ public class SwitchViewGroup extends BaseViewGroup{
 
     @Override
     protected void bindView(){
-        editText = (EditText) findViewById( R.id.text );
-        toggle = (CustomSwitch) findViewById( R.id.toggle );
+        editText =  findViewById( R.id.text );
+        toggle =  findViewById( R.id.toggle );
     }
 
     @Override

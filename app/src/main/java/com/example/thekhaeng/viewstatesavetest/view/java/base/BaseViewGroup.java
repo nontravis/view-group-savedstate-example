@@ -1,4 +1,4 @@
-package com.example.thekhaeng.viewstatesavetest.view.base;
+package com.example.thekhaeng.viewstatesavetest.view.java.base;
 
 import android.content.Context;
 import android.os.Build;
@@ -10,10 +10,11 @@ import android.util.SparseArray;
 import android.widget.FrameLayout;
 
 /**
- * Created by TheKhaeng
+ * Created by TheKhaeng on 9/22/2016.
  */
 
 abstract public class BaseViewGroup extends FrameLayout{
+
 
     public BaseViewGroup( Context context ){
         super( context );
@@ -40,22 +41,16 @@ abstract public class BaseViewGroup extends FrameLayout{
         if( attrs != null ) setupStyleables( attrs, defStyleAttr, defStyleRes );
         inflateLayout();
         bindView();
+        setupInstance();
         setupView();
     }
 
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof ChildSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-        ChildSavedState ss = (ChildSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-        onRestoreChildInstanceState(ss);
-    }
-
-    @SuppressWarnings( "unchecked" )
+    /**
+     * Custom handle SavedState child to "fix restore state in same resource id"
+     * when use ViewGroup more than one.
+     * <p>
+     * the method must be call in subclass.
+     **/
     protected Parcelable onSaveChildInstanceState( ChildSavedState ss ){
         ss.childrenStates = new SparseArray();
         for( int i = 0; i < getChildCount(); i++ ){
@@ -65,32 +60,33 @@ abstract public class BaseViewGroup extends FrameLayout{
                 getChildAt( i ).saveHierarchyState( childrenState );
                 ss.childrenStates.put( id, childrenState );
             }
-
         }
         return ss;
     }
 
-    private void onRestoreChildInstanceState( ChildSavedState ss) {
-        for (int i = 0; i < getChildCount(); i++) {
-            int id = getChildAt(i).getId();
-            if (id != 0) {
-                if (ss.childrenStates.get(id) != null) {
-                    SparseArray childrenState = (SparseArray) ss.childrenStates.get(id);
-                    getChildAt(i).restoreHierarchyState(childrenState);
+    @Override
+    protected void onRestoreInstanceState( Parcelable state ){
+        if( !( state instanceof ChildSavedState ) ){
+            super.onRestoreInstanceState( state );
+            return;
+        }
+        ChildSavedState ss = (ChildSavedState) state;
+        super.onRestoreInstanceState( ss );
+        onRestoreChildInstanceState( ss );
+    }
+
+    private void onRestoreChildInstanceState( ChildSavedState ss ){
+        for( int i = 0; i < getChildCount(); i++ ){
+            int id = getChildAt( i ).getId();
+            if( id != 0 ){
+                if( ss.childrenStates.get( id ) != null ){
+                    SparseArray childrenState = (SparseArray) ss.childrenStates.get( id );
+                    getChildAt( i ).restoreHierarchyState( childrenState );
                 }
             }
         }
     }
 
-    @Override
-    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container ){
-        dispatchFreezeSelfOnly( container );
-    }
-
-    @Override
-    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container ){
-        dispatchThawSelfOnly( container );
-    }
 
     public static abstract class ChildSavedState extends BaseSavedState{
         SparseArray childrenStates;
@@ -112,15 +108,30 @@ abstract public class BaseViewGroup extends FrameLayout{
     }
 
 
+    @Override
+    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container ){
+        dispatchFreezeSelfOnly( container );
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container ){
+        dispatchThawSelfOnly( container );
+    }
+
     private void inflateLayout(){
         inflate( getContext(), getLayoutRes(), this );
     }
 
     protected abstract int getLayoutRes();
 
-    protected abstract void setupStyleables( AttributeSet attrs, int defStyleAttr, int defStyleRes );
+    protected void setupStyleables( AttributeSet attrs, int defStyleAttr, int defStyleRes ){
+    }
 
-    protected abstract void bindView();
+    protected void bindView(){
+    }
+
+    protected void setupInstance(){
+    }
 
     protected abstract void setupView();
 

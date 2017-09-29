@@ -14,9 +14,7 @@ If you want to test savedstate Enable **Developer mode**
 Go to Developer Options -> and check ** Don't Keep Activities **
 ```
 
-![View savedstate][view_savedstate]
-
-![ViewGroup savedstate][viewgroup_savedstate]
+![View savedstate][view_savedstate]     ![ViewGroup savedstate][viewgroup_savedstate]
 
 ---
 

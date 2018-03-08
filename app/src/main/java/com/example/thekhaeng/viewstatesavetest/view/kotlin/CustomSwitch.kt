@@ -1,8 +1,10 @@
 package com.example.thekhaeng.viewstatesavetest.view.kotlin
 
 import android.content.Context
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Switch
@@ -27,7 +29,8 @@ class CustomSwitch : Switch {
         this.customState = customState
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override
+    fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
         val ss = SavedState(superState)
         ss.state = customState
@@ -35,27 +38,28 @@ class CustomSwitch : Switch {
     }
 
 
-    override fun onRestoreInstanceState(state: Parcelable) {
+    override
+    fun onRestoreInstanceState(state: Parcelable) {
         if (state !is SavedState) {
             super.onRestoreInstanceState(state)
             return
         }
-        val ss = state
-        super.onRestoreInstanceState(ss.superState)
-        setCustomState(ss.state)
+        super.onRestoreInstanceState(state.superState)
+        setCustomState(state.state)
     }
 
 
     internal class SavedState : View.BaseSavedState {
         var state: Int = 0
 
-        constructor(superState: Parcelable) : super(superState) {}
+        constructor(superState: Parcelable) : super(superState)
 
-        private constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
+        constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`) {
             state = `in`.readInt()
         }
 
-        override fun writeToParcel(out: Parcel, flags: Int) = with(out) {
+        override
+        fun writeToParcel(out: Parcel, flags: Int) = with(out) {
             super.writeToParcel(out, flags)
             out.writeInt(state)
         }
@@ -63,9 +67,14 @@ class CustomSwitch : Switch {
         companion object {
             @JvmField
             val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
-                override fun createFromParcel(`in`: Parcel): SavedState? = null
-                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+                override
+                fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
+
+                override
+                fun createFromParcel(`in`: Parcel): SavedState? = null
+
+                override
+                fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
             }
         }
     }

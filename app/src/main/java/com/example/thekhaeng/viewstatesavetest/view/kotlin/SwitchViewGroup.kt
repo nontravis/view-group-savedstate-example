@@ -95,9 +95,14 @@ class SwitchViewGroup
         companion object {
             @JvmField
             val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
-                override fun createFromParcel(`in`: Parcel): SavedState? = null
-                override fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+                override
+                fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
+
+                override
+                fun createFromParcel(`in`: Parcel): SavedState? = null
+
+                override
+                fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
             }
         }
     }

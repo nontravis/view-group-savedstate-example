@@ -1,5 +1,6 @@
 # ViewGroup savedstate EXAMPLE
 
+[![Build Status](https://travis-ci.org/TheKhaeng/view-group-savedstate-example.svg?branch=master)](https://travis-ci.org/TheKhaeng/view-group-savedstate-example)
 
 [Read my medium blog [th]](https://blog.nextzy.me/savedstate-viewgroup-%E0%B9%83%E0%B8%AB%E0%B9%89%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5-ebd9615715e1?source=linkShare-51da4bed1004-1484761618)
 

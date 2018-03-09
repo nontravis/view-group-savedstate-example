@@ -13,7 +13,8 @@ import android.widget.FrameLayout;
  * Created by TheKhaeng on 9/22/2016.
  */
 
-abstract public class BaseViewGroup extends FrameLayout{
+@SuppressWarnings( "unchecked" )
+public abstract class BaseViewGroup extends FrameLayout{
 
 
     public BaseViewGroup( Context context ){
@@ -88,7 +89,7 @@ abstract public class BaseViewGroup extends FrameLayout{
     }
 
 
-    public static abstract class ChildSavedState extends BaseSavedState{
+    public abstract class ChildSavedState extends BaseSavedState{
         SparseArray childrenStates;
 
         public ChildSavedState( Parcelable superState ){

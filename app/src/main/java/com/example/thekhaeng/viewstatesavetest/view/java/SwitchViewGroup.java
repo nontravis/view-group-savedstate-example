@@ -96,7 +96,7 @@ public class SwitchViewGroup extends BaseViewGroup{
     }
 
 
-    private static class SavedState extends ChildSavedState{
+    private class SavedState extends BaseViewGroup.ChildSavedState{
 
         SavedState( Parcelable superState ){
             super( superState );
@@ -113,7 +113,7 @@ public class SwitchViewGroup extends BaseViewGroup{
             // restore data here
         }
 
-        public static final ClassLoaderCreator<SavedState> CREATOR = new ClassLoaderCreator<SwitchViewGroup.SavedState>(){
+        public final ClassLoaderCreator<SavedState> CREATOR = new ClassLoaderCreator<SwitchViewGroup.SavedState>(){
             @Override
             public SwitchViewGroup.SavedState createFromParcel( Parcel source, ClassLoader loader ){
                 return new SwitchViewGroup.SavedState( source, loader );

@@ -19,44 +19,76 @@ Go to Developer Options -> and check ** Don't Keep Activities **
 
 ---
 
-[**BaseViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/base/BaseViewGroup.java)
-```java
-abstract public class BaseViewGroup extends FrameLayout{
+[**BaseViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/base/BaseViewGroup.java)
+
+[**BaseViewGroup.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/base/BaseViewGroup.kt)
+```kotlin
+abstract class BaseViewGroup
+@JvmOverloads constructor(context: Context,
+                          attrs: AttributeSet? = null,
+                          defStyleAttr: Int = 0,
+                          defStyleRes: Int = 0)
+    : FrameLayout(context, attrs, defStyleAttr) {
+
+    init {
+        setup(attrs, defStyleAttr, defStyleRes)
+    }
 
     ...
 
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof ChildSavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-        ChildSavedState ss = (ChildSavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-        onRestoreChildInstanceState(ss);
-    }
-
-    protected Parcelable onSaveInstanceChildState( ChildSavedState ss ){
-        ss.childrenStates = new SparseArray();
-        for( int i = 0; i < getChildCount(); i++ ){
-            int id = getChildAt( i ).getId();
-            if( id != 0 ){
-                SparseArray childrenState = new SparseArray();
-                getChildAt( i ).saveHierarchyState( childrenState );
-                ss.childrenStates.put( id, childrenState );
+    /**
+     * Custom handle SavedState child to "fix restore state in same resource id"
+     * when use ViewGroup more than one.
+     *
+     *
+     * the method must be call in subclass.
+     */
+    protected fun onSaveChildInstanceState(ss: ChildSavedState): Parcelable {
+        ss.childrenStates = SparseArray()
+        for (i in 0 until childCount) {
+            val id = getChildAt(i).id
+            if (id != 0) {
+                val childrenState = SparseArray<Parcelable>()
+                getChildAt(i).saveHierarchyState(childrenState)
+                ss.childrenStates?.put(id, childrenState)
             }
 
         }
-        return ss;
+        return ss
     }
 
-    private void onRestoreInstanceChildState(ChildSavedState ss) {
-        for (int i = 0; i < getChildCount(); i++) {
-            int id = getChildAt(i).getId();
+    override
+    fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is ChildSavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+        super.onRestoreInstanceState(state.superState)
+        onRestoreChildInstanceState(state)
+    }
+
+
+
+    override
+    fun dispatchSaveInstanceState(container: SparseArray<Parcelable>) {
+        dispatchFreezeSelfOnly(container)
+    }
+
+    override
+    fun dispatchRestoreInstanceState(container: SparseArray<Parcelable>) {
+        dispatchThawSelfOnly(container)
+    }
+
+    ...
+
+    @Suppress("UNCHECKED_CAST")
+    private fun onRestoreChildInstanceState(ss: ChildSavedState) {
+        for (i in 0 until childCount) {
+            val id = getChildAt(i).id
             if (id != 0) {
-                if (ss.childrenStates.get(id) != null) {
-                    SparseArray childrenState = (SparseArray) ss.childrenStates.get(id);
-                    getChildAt(i).restoreHierarchyState(childrenState);
+                if (ss.childrenStates?.get(id) != null) {
+                    val childrenState = ss.childrenStates?.get(id) as SparseArray<Parcelable?>
+                    getChildAt(i).restoreHierarchyState(childrenState)
                 }
             }
         }
@@ -64,114 +96,93 @@ abstract public class BaseViewGroup extends FrameLayout{
 
     ...
 
-    @Override
-    protected void dispatchSaveInstanceState( SparseArray<Parcelable> container ){
-        dispatchFreezeSelfOnly( container );
-    }
+    abstract class ChildSavedState : View.BaseSavedState {
+        internal var childrenStates: SparseArray<Any>? = null
 
-    @Override
-    protected void dispatchRestoreInstanceState( SparseArray<Parcelable> container ){
-        dispatchThawSelfOnly( container );
-    }
+        constructor(superState: Parcelable) : super(superState)
 
-
-    public static abstract class ChildSavedState extends BaseSavedState{
-        SparseArray childrenStates;
-
-        public ChildSavedState( Parcelable superState ){
-            super( superState );
+        constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`) {
+            childrenStates = `in`.readSparseArray(classLoader)
         }
 
-        public ChildSavedState( Parcel in, ClassLoader classLoader ){
-            super( in );
-            childrenStates = in.readSparseArray( classLoader );
-        }
-
-        @Override
-        public void writeToParcel( Parcel out, int flags ){
-            super.writeToParcel( out, flags );
-            out.writeSparseArray( childrenStates );
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeSparseArray(childrenStates)
         }
     }
-
 }
 
 ```
 
 
-[**SwitchViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/SwitchViewGroup.java)
+[**SwitchViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/SwitchViewGroup.java)
+
+[**SwitchViewGroup.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/SwitchViewGroup.kt)
 ```java
-public class SwitchViewGroup extends BaseViewGroup{
+class SwitchViewGroup
+@JvmOverloads constructor(context: Context,
+                          attrs: AttributeSet? = null,
+                          defStyleAttr: Int = 0,
+                          defStyleRes: Int = 0)
+    : BaseViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     ...
 
-    @Override
-    public Parcelable onSaveInstanceState(){
-        Parcelable superState = super.onSaveInstanceState();
+    public override fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
         // Must call
-        SavedState ss = (SavedState) onSaveInstanceChildState( new SavedState( superState ) );
-        //save data here
-
-        return ss;
+        val ss = onSaveChildInstanceState(SavedState(superState)) as SavedState
+        // save data here
+        return ss
     }
 
 
-    @Override
-    public void onRestoreInstanceState( Parcelable state ){
-        if( !( state instanceof SavedState ) ){
-            super.onRestoreInstanceState( state );
-            return;
+    public override fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
         }
-        SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState( ss );
-        //restore data here
-
+        super.onRestoreInstanceState(state)
+        // restore data here
     }
 
-    ...
 
-    private static class SavedState extends ChildSavedState{
+    private class SavedState : BaseViewGroup.ChildSavedState {
 
-        SavedState( Parcelable superState ){
-            super( superState );
+        internal constructor(superState: Parcelable) : super(superState) {}
+
+        private constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
+            // save data here
         }
 
-        private SavedState( Parcel in, ClassLoader classLoader ){
-            super( in, classLoader );
-            //save data here
+        override
+        fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            // restore data here
         }
 
-        @Override
-        public void writeToParcel( Parcel out, int flags ){
-            super.writeToParcel( out, flags );
-            //restore data here
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
+                override
+                fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
+
+                override
+                fun createFromParcel(`in`: Parcel): SavedState? = null
+
+                override
+                fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+            }
         }
-
-        public static final ClassLoaderCreator<SavedState> CREATOR = new ClassLoaderCreator<SwitchViewGroup.SavedState>(){
-            @Override
-            public SwitchViewGroup.SavedState createFromParcel( Parcel source, ClassLoader loader ){
-                return new SwitchViewGroup.SavedState( source, loader );
-            }
-
-            public SwitchViewGroup.SavedState createFromParcel( Parcel in ){
-                return null;
-            }
-
-
-            public SwitchViewGroup.SavedState[] newArray( int size ){
-                return new SwitchViewGroup.SavedState[size];
-            }
-        };
     }
 
 }
-
 ```
 
 ### Developed By Thai android developer.
 
 
-<img src="./media/profile2_circle.png" width="170"> ![alt text](./media/thekhaeng_logo.png)
+[<img src="./media/profile2_circle.png" width="170">](https://www.facebook.com/nonthawit) [![TheKhaeng](./media/thekhaeng_logo.png)](https://www.facebook.com/thekhaeng.io/)
 
 
 Follow [facebook.com/thekhaeng.io](https://www.facebook.com/thekhaeng.io) on Facebook page.

@@ -13,7 +13,8 @@ import android.widget.Switch
  * Created by TheKhaeng
  */
 
-class CustomSwitch : Switch {
+class CustomSwitch
+    : Switch {
 
     private var customState: Int = 0
 
@@ -23,7 +24,8 @@ class CustomSwitch : Switch {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr,defStyleRes) {}
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {}
 
     fun setCustomState(customState: Int) {
         this.customState = customState

@@ -1,8 +1,10 @@
 package com.example.thekhaeng.viewstatesavetest.view.kotlin.base
 
 import android.content.Context
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.View
@@ -12,16 +14,23 @@ import android.widget.FrameLayout
 * Created by The Khaeng on 08 Mar 2018 :)
 */
 
-abstract class BaseViewGroup
-@JvmOverloads constructor(context: Context,
-                          attrs: AttributeSet? = null,
-                          defStyleAttr: Int = 0,
-                          defStyleRes: Int = 0)
-    : FrameLayout(context, attrs, defStyleAttr) {
+abstract class BaseViewGroup : FrameLayout {
 
-    init {
+    @JvmOverloads
+    constructor(
+            context: Context,
+            attrs: AttributeSet? = null,
+            defStyleAttr: Int = 0)
+            : super(context, attrs, defStyleAttr) {
+        setup(attrs, defStyleAttr, 0)
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int)
+            : super(context, attrs, defStyleAttr, defStyleRes) {
         setup(attrs, defStyleAttr, defStyleRes)
     }
+
 
     private fun setup(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs != null) setupStyleables(attrs, defStyleAttr, defStyleRes)

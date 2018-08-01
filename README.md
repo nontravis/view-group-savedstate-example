@@ -253,7 +253,7 @@ class SwitchViewGroup
 [**CustomSwitch.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/CustomSwitch.java)
 
 [**CustomSwitch.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/CustomSwitch.kt)
-```
+```kotlin
 class CustomSwitch
     : Switch {
 

@@ -7,6 +7,7 @@
 
 #### [UPDATE]
 
+- fix bug
 - kotlin CustomView example :)
 
 If you want to test savedstate Enable **Developer mode**
@@ -22,19 +23,33 @@ Go to Developer Options -> and check ** Don't Keep Activities **
 [**BaseViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/base/BaseViewGroup.java)
 
 [**BaseViewGroup.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/base/BaseViewGroup.kt)
-```kotlin
-abstract class BaseViewGroup
-@JvmOverloads constructor(context: Context,
-                          attrs: AttributeSet? = null,
-                          defStyleAttr: Int = 0,
-                          defStyleRes: Int = 0)
-    : FrameLayout(context, attrs, defStyleAttr) {
 
-    init {
+```kotlin
+abstract class BaseViewGroup : FrameLayout {
+
+    @JvmOverloads
+    constructor(
+            context: Context,
+            attrs: AttributeSet? = null,
+            defStyleAttr: Int = 0)
+            : super(context, attrs, defStyleAttr) {
+        setup(attrs, defStyleAttr, 0)
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int)
+            : super(context, attrs, defStyleAttr, defStyleRes) {
         setup(attrs, defStyleAttr, defStyleRes)
     }
 
-    ...
+
+    private fun setup(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+        if (attrs != null) setupStyleables(attrs, defStyleAttr, defStyleRes)
+        inflateLayout()
+        bindView()
+        setupInstance()
+        setupView()
+    }
 
     /**
      * Custom handle SavedState child to "fix restore state in same resource id"
@@ -79,7 +94,9 @@ abstract class BaseViewGroup
         dispatchThawSelfOnly(container)
     }
 
-    ...
+    private fun inflateLayout() {
+        View.inflate(context, getLayoutRes(), this)
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun onRestoreChildInstanceState(ss: ChildSavedState) {
@@ -94,7 +111,18 @@ abstract class BaseViewGroup
         }
     }
 
-    ...
+
+    protected abstract fun getLayoutRes(): Int
+
+    protected abstract fun setupView()
+
+    protected open fun setupStyleables(attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {}
+
+    protected open fun bindView() {}
+
+    protected open fun setupInstance() {}
+
+
 
     abstract class ChildSavedState : View.BaseSavedState {
         internal var childrenStates: SparseArray<Any>? = null
@@ -110,15 +138,19 @@ abstract class BaseViewGroup
             out.writeSparseArray(childrenStates)
         }
     }
+
+
+
 }
 
 ```
 
+---
 
 [**SwitchViewGroup.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/SwitchViewGroup.java)
 
 [**SwitchViewGroup.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/SwitchViewGroup.kt)
-```java
+```kotlin
 class SwitchViewGroup
 @JvmOverloads constructor(context: Context,
                           attrs: AttributeSet? = null,
@@ -126,7 +158,44 @@ class SwitchViewGroup
                           defStyleRes: Int = 0)
     : BaseViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
-    ...
+    private var editText: EditText? = null
+    private var toggle: CustomSwitch? = null
+    private val checkChangeListener: UserAdapter.OnCheckedChangeListener? = null
+    private val textChangedListener: UserAdapter.OnTextChangeListener? = null
+
+
+    override
+    fun getLayoutRes(): Int = R.layout.switch_custom_view_group
+
+    override
+    fun setupStyleables(attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {
+    }
+
+    override
+    fun bindView() {
+        editText = findViewById(R.id.editText)
+        toggle = findViewById(R.id.toggle)
+    }
+
+    override
+    fun setupView() {
+    }
+
+    fun setTextToEditText(message: String?) {
+        editText?.setText(message)
+    }
+
+    fun setTextChangedListener(listener: TextWatcher) {
+        editText?.addTextChangedListener(listener)
+    }
+
+    fun setOnCheckChangeListener(listener: CompoundButton.OnCheckedChangeListener) {
+        toggle?.setOnCheckedChangeListener(listener)
+    }
+
+    fun setCheck(check: Boolean) {
+        toggle?.isChecked = check
+    }
 
     public override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
@@ -147,11 +216,11 @@ class SwitchViewGroup
     }
 
 
-    private class SavedState : BaseViewGroup.ChildSavedState {
+    internal class SavedState : BaseViewGroup.ChildSavedState {
 
-        internal constructor(superState: Parcelable) : super(superState) {}
+        constructor(superState: Parcelable) : super(superState) {}
 
-        private constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
+        constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
             // save data here
         }
 
@@ -176,6 +245,81 @@ class SwitchViewGroup
         }
     }
 
+}
+```
+
+---
+
+[**CustomSwitch.java**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/java/CustomSwitch.java)
+
+[**CustomSwitch.kt**](./app/src/main/java/com/example/thekhaeng/viewstatesavetest/view/kotlin/CustomSwitch.kt)
+```
+class CustomSwitch
+    : Switch {
+
+    private var customState: Int = 0
+
+    constructor(context: Context) : super(context) {}
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    }
+
+    fun setCustomState(customState: Int) {
+        this.customState = customState
+    }
+
+    override
+    fun onSaveInstanceState(): Parcelable? {
+        val superState = super.onSaveInstanceState()
+        val ss = SavedState(superState)
+        ss.state = customState
+        return ss
+    }
+
+
+    override
+    fun onRestoreInstanceState(state: Parcelable) {
+        if (state !is SavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+        super.onRestoreInstanceState(state.superState)
+        setCustomState(state.state)
+    }
+
+
+    internal class SavedState : ViewSavedState {
+        var state: Int = 0
+
+        constructor(superState: Parcelable) : super(superState)
+
+        constructor(`in`: Parcel) : super(`in`) {
+            state = `in`.readInt()
+        }
+
+        override
+        fun writeToParcel(out: Parcel, flags: Int) = with(out) {
+            super.writeToParcel(out, flags)
+            out.writeInt(state)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+
+                override
+                fun createFromParcel(`in`: Parcel): SavedState? = SavedState(`in`)
+
+                override
+                fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
+            }
+        }
+    }
 }
 ```
 

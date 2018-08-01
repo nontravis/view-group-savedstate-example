@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.Switch;
 
+import com.example.thekhaeng.viewstatesavetest.view.java.base.ViewSavedState;
+
 /**
  * Created by TheKhaeng
  */
@@ -45,11 +47,11 @@ public class CustomSwitch extends Switch {
             return;
         }
         SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
+        super.onRestoreInstanceState(ss.superState);
         setCustomState( ss.state );
     }
 
-    static class SavedState extends BaseSavedState{
+    static class SavedState extends ViewSavedState {
         int state;
 
         SavedState( Parcelable superState ){

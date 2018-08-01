@@ -6,8 +6,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
-import android.view.View
 import android.widget.Switch
+import com.example.thekhaeng.viewstatesavetest.view.kotlin.base.ViewSavedState
 
 /**
  * Created by TheKhaeng
@@ -52,7 +52,7 @@ class CustomSwitch
     }
 
 
-    internal class SavedState : View.BaseSavedState {
+    internal class SavedState : ViewSavedState {
         var state: Int = 0
 
         constructor(superState: Parcelable) : super(superState)

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.example.thekhaeng.viewstatesavetest.view.kotlin.SwitchViewGroup
+    <com.example.thekhaeng.viewstatesavetest.view.java.SwitchViewGroup
         android:id="@+id/switch1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

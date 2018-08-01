@@ -89,7 +89,7 @@ public abstract class BaseViewGroup extends FrameLayout{
     }
 
 
-    public abstract class ChildSavedState extends BaseSavedState{
+    public abstract static class ChildSavedState extends BaseSavedState{
         SparseArray childrenStates;
 
         public ChildSavedState( Parcelable superState ){

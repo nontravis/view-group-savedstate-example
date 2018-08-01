@@ -49,7 +49,7 @@ public class CustomSwitch extends Switch {
         setCustomState( ss.state );
     }
 
-    private static class SavedState extends BaseSavedState{
+    static class SavedState extends BaseSavedState{
         int state;
 
         SavedState( Parcelable superState ){

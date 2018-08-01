@@ -11,6 +11,7 @@ import com.example.thekhaeng.viewstatesavetest.R
 import com.example.thekhaeng.viewstatesavetest.testSavedStateAdapter.adapter.UserAdapter
 import com.example.thekhaeng.viewstatesavetest.view.kotlin.base.BaseViewGroup
 
+
 /**
  * Created by TheKhaeng
  */
@@ -32,7 +33,8 @@ class SwitchViewGroup
     fun getLayoutRes(): Int = R.layout.switch_custom_view_group
 
     override
-    fun setupStyleables(attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {}
+    fun setupStyleables(attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {
+    }
 
     override
     fun bindView() {
@@ -41,7 +43,8 @@ class SwitchViewGroup
     }
 
     override
-    fun setupView() {}
+    fun setupView() {
+    }
 
     fun setTextToEditText(message: String?) {
         editText?.setText(message)
@@ -78,11 +81,11 @@ class SwitchViewGroup
     }
 
 
-    private class SavedState : BaseViewGroup.ChildSavedState {
+    internal class SavedState : BaseViewGroup.ChildSavedState {
 
-        internal constructor(superState: Parcelable) : super(superState) {}
+        constructor(superState: Parcelable) : super(superState) {}
 
-        private constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
+        constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`, classLoader) {
             // save data here
         }
 

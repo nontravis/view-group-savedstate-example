@@ -25,7 +25,8 @@ class CustomSwitch
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {}
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    }
 
     fun setCustomState(customState: Int) {
         this.customState = customState
@@ -56,7 +57,7 @@ class CustomSwitch
 
         constructor(superState: Parcelable) : super(superState)
 
-        constructor(`in`: Parcel, classLoader: ClassLoader) : super(`in`) {
+        constructor(`in`: Parcel) : super(`in`) {
             state = `in`.readInt()
         }
 
@@ -68,12 +69,10 @@ class CustomSwitch
 
         companion object {
             @JvmField
-            val CREATOR: Parcelable.ClassLoaderCreator<SavedState> = object : Parcelable.ClassLoaderCreator<SavedState> {
-                override
-                fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState = SavedState(source, loader)
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
 
                 override
-                fun createFromParcel(`in`: Parcel): SavedState? = null
+                fun createFromParcel(`in`: Parcel): SavedState? = SavedState(`in`)
 
                 override
                 fun newArray(size: Int): Array<SavedState?> = arrayOfNulls(size)
